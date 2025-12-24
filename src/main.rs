@@ -1,6 +1,5 @@
 use vibrator::speech::SpeechEngine;
 use vibrator::atspi_handler::AtspiHandler;
-use vibrator::input::start_input_loop;
 use std::sync::{Arc, Mutex};
 use anyhow::Result;
 
@@ -14,16 +13,15 @@ async fn main() -> Result<()> {
         s.speak("Vibrator started.")?;
     }
 
-    // Start input loop in a separate thread
-    start_input_loop(speech.clone());
-
-    let atspi = AtspiHandler::new(speech.clone()).await?;
+    let mut atspi = AtspiHandler::new(speech.clone()).await?;
     
     println!("Connected to AT-SPI. Listening for events...");
     atspi.process_events().await?;
 
+
     Ok(())
 }
+
 
 
 
